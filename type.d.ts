@@ -18,3 +18,14 @@ interface CustomButtonProps {
     isLoading?: boolean;
     disabled?: boolean
 }
+
+interface CreateUserPrams {
+    email: string;
+    password: string;
+    name: string;
+}
+
+interface SignInParams {
+    email: string;
+    password: string;
+}

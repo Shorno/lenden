@@ -1,9 +1,10 @@
-import { Alert, Text, View, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import {Alert, Text, View, TouchableOpacity} from "react-native";
+import {Ionicons} from "@expo/vector-icons";
 import {router} from "expo-router";
-import { useState } from "react";
-import { CustomInput } from "@/components/CustomInput";
+import {useState} from "react";
+import {CustomInput} from "@/components/CustomInput";
 import CustomButton from "@/components/CustomButton";
+import {createUser} from "@/lib/appwrite";
 
 export const SignUpForm = () => {
     const [formData, setFormData] = useState({
@@ -17,6 +18,8 @@ export const SignUpForm = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSignUp = async () => {
+        const {email, name, password} = formData
+
         if (!formData.name || !formData.email || !formData.password) {
             Alert.alert("Error", "Please fill in all fields");
             return;
@@ -29,14 +32,16 @@ export const SignUpForm = () => {
             Alert.alert("Error", "Password must be at least 6 characters");
             return;
         }
-        setIsLoading(true);
+        setIsLoading(true)
+        try {
+            await createUser({email, name, password})
+            router.replace("/")
+        } catch (error: any) {
+            Alert.alert("Error", error.message)
+        } finally {
+            setIsLoading(false)
+        }
 
-
-        setTimeout(() => {
-            setIsLoading(false);
-            Alert.alert("Success", `${formData.name}`);
-            router.push("/sign-in");
-        }, 2000);
     };
 
     return (
@@ -45,24 +50,24 @@ export const SignUpForm = () => {
                 label="Full Name"
                 placeholder="Enter your full name"
                 value={formData.name}
-                onChangeText={text => setFormData({ ...formData, name: text })}
+                onChangeText={text => setFormData({...formData, name: text})}
                 keyboardType="default"
             />
             <CustomInput
                 label="Email Address"
                 placeholder="Enter your email"
                 value={formData.email}
-                onChangeText={text => setFormData({ ...formData, email: text })}
+                onChangeText={text => setFormData({...formData, email: text})}
                 keyboardType="email-address"
             />
             <CustomInput
                 label="Password"
                 placeholder="Enter your password"
                 value={formData.password}
-                onChangeText={text => setFormData({ ...formData, password: text })}
+                onChangeText={text => setFormData({...formData, password: text})}
                 secureTextEntry={!showPassword}
                 rightIcon={
-                    <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color="#6B7280" />
+                    <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color="#6B7280"/>
                 }
                 onRightIconPress={() => setShowPassword(!showPassword)}
             />
@@ -70,10 +75,10 @@ export const SignUpForm = () => {
                 label="Confirm Password"
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
-                onChangeText={text => setFormData({ ...formData, confirmPassword: text })}
+                onChangeText={text => setFormData({...formData, confirmPassword: text})}
                 secureTextEntry={!showConfirmPassword}
                 rightIcon={
-                    <Ionicons name={showConfirmPassword ? "eye-off" : "eye"} size={20} color="#6B7280" />
+                    <Ionicons name={showConfirmPassword ? "eye-off" : "eye"} size={20} color="#6B7280"/>
                 }
                 onRightIconPress={() => setShowConfirmPassword(!showConfirmPassword)}
             />
