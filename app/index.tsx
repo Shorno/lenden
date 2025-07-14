@@ -1,15 +1,21 @@
 import "./global.css"
 import {Text, View} from "react-native";
 import {Redirect} from "expo-router";
-import {getCurrentUser} from "@/lib/appwrite";
+import useAuthStore from "@/store/auth.store";
 
 export default function Index() {
+    const {isAuthenticated, isLoading, user} = useAuthStore();
 
-    const currentUser = getCurrentUser()
 
-    if (!currentUser) {
+    if (isLoading) {
+        return null;
+    }
+
+    if (!isAuthenticated) {
         return <Redirect href={"/sign-in"}/>
     }
+
+    console.log(user)
 
     return (
         <View className="flex-1 items-center justify-center bg-white">
