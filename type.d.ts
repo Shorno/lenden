@@ -1,4 +1,5 @@
 import {Models} from "react-native-appwrite";
+import {ReactNode} from "react";
 
 interface CustomInputProps {
     placeholder?: string;
@@ -37,4 +38,10 @@ export interface User extends Models.Document {
     name: string;
     email: string;
     avatar: string;
+}
+
+interface TabBarIconProps {
+    focused: boolean;
+    icon: ReactNode;
+    title: string;
 }

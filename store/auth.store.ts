@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import {create} from 'zustand';
 import {User} from "@/type";
 import {getCurrentUser} from "@/lib/appwrite";
 
@@ -19,8 +19,8 @@ const useAuthStore = create<AuthState>((set) => ({
     user: null,
     isLoading: true,
 
-    setIsAuthenticated: (value) => set({ isAuthenticated: value }),
-    setUser: (user) => set({ user }),
+    setIsAuthenticated: (value) => set({isAuthenticated: value}),
+    setUser: (user) => set({user}),
     setLoading: (value) => set({isLoading: value}),
 
     fetchAuthenticatedUser: async () => {
@@ -29,13 +29,15 @@ const useAuthStore = create<AuthState>((set) => ({
         try {
             const user = await getCurrentUser();
 
-            if(user) set({ isAuthenticated: true, user: user as User })
-            else set( { isAuthenticated: false, user: null } );
+            if (user) set({
+                isAuthenticated: true,
+                user: user as User,
+            })
+            else set({isAuthenticated: false, user: null});
         } catch (e) {
-            console.log('fetchAuthenticatedUser error', e);
-            set({ isAuthenticated: false, user: null })
+            set({isAuthenticated: false, user: null})
         } finally {
-            set({ isLoading: false });
+            set({isLoading: false});
         }
     }
 }))
