@@ -17,17 +17,17 @@ const TabBarIcon = ({focused, icon, title}: TabBarIconProps) => (
     </View>
 )
 
-const ProfileIcon = () => (
-    <MaterialIcons name="person" size={28} color="#5D5F6D"/>
+const ProfileIcon = ({focused}: {focused: boolean}) => (
+    <MaterialIcons name="person" size={28} color={focused ? "#FE8C00" : "#5D5F6D"}/>
 );
 
-const HomeIcon = () => (
-    <MaterialIcons name="home" size={28} color="#5D5F6D"/>
-)
+const HomeIcon = ({focused}: {focused: boolean}) => (
+    <MaterialIcons name="home" size={28} color={focused ? "#FE8C00" : "#5D5F6D"}/>
+);
 
-const ListIcon  = ()=>(
-    <Entypo name="list" size={28} color="black" />
-)
+const ListIcon = ({focused}: {focused: boolean}) => (
+    <Entypo name="list" size={28} color={focused ? "#FE8C00" : "#5D5F6D"} />
+);
 export default function TabLayout() {
     const {isAuthenticated} = useAuthStore();
 
@@ -39,41 +39,30 @@ export default function TabLayout() {
             headerShown: false,
             tabBarShowLabel: false,
             tabBarStyle: {
-                borderTopLeftRadius: 50,
-                borderTopRightRadius: 50,
-                borderBottomLeftRadius: 50,
-                borderBottomRightRadius: 50,
-                marginHorizontal: 20,
+                borderTopLeftRadius: 25,
+                borderTopRightRadius: 25,
                 height: 80,
-                position: 'absolute',
-                bottom: 40,
-                backgroundColor: 'white',
-                shadowColor: '#1a1a1a',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.1,
-                shadowRadius: 4,
-                elevation: 5
             }
         }}>
             <Tabs.Screen
                 name='index'
                 options={{
                     title: 'Home',
-                    tabBarIcon: ({focused}) => <TabBarIcon title="Home" icon={<HomeIcon/>} focused={focused}/>
+                    tabBarIcon: ({focused}) => <TabBarIcon title="Home" icon={<HomeIcon focused={focused}/>} focused={focused}/>
                 }}
             />
             <Tabs.Screen
                 name='clients'
                 options={{
                     title: 'Clients',
-                    tabBarIcon: ({focused}) => <TabBarIcon title="Clients" icon={<ListIcon/>} focused={focused}/>
+                    tabBarIcon: ({focused}) => <TabBarIcon title="Clients" icon={<ListIcon focused={focused}/>} focused={focused}/>
                 }}
             />
             <Tabs.Screen
                 name='profile'
                 options={{
                     title: 'Profile',
-                    tabBarIcon: ({focused}) => <TabBarIcon title="Profile" icon={<ProfileIcon/>} focused={focused}/>
+                    tabBarIcon: ({focused}) => <TabBarIcon title="Profile" icon={<ProfileIcon focused={focused}/>} focused={focused}/>
                 }}
             />
         </Tabs>

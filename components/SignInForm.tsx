@@ -13,9 +13,10 @@ import {Ionicons} from "@expo/vector-icons";
 import CustomButton from "@/components/CustomButton";
 import {CustomInput} from "@/components/CustomInput";
 import {signIn} from "@/lib/appwrite";
+import useAuthStore from "@/store/auth.store";
 
 export const SignInForm = () => {
-
+    const { fetchAuthenticatedUser } = useAuthStore();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -33,6 +34,7 @@ export const SignInForm = () => {
         setIsLoading(true)
         try {
             await signIn({email, password})
+            await fetchAuthenticatedUser()
             router.replace("/")
         } catch (error: any) {
             Alert.alert('Error', error.message)
@@ -66,7 +68,7 @@ export const SignInForm = () => {
                             label="Email Address"
                             placeholder="Enter your email"
                             value={formData.email}
-                            onChangeText={text => setFormData({...formData, email: text})}
+                            onChangeText={(text:string) => setFormData({...formData, email: text})}
                             keyboardType="email-address"
                         />
 
@@ -75,7 +77,7 @@ export const SignInForm = () => {
                             label="Password"
                             placeholder="Enter your password"
                             value={formData.password}
-                            onChangeText={text => setFormData({...formData, password: text})}
+                            onChangeText={(text : string) => setFormData({...formData, password: text})}
                             secureTextEntry={!showPassword}
                             rightIcon={
                                 <Ionicons
