@@ -3,6 +3,8 @@ import * as Sentry from '@sentry/react-native';
 import {useFonts} from "expo-font";
 import {useEffect} from "react";
 import useAuthStore from "@/store/auth.store";
+import {QueryClientProvider} from "@tanstack/react-query";
+import {queryClient} from "@/lib/queryClient";
 
 Sentry.init({
     dsn: 'https://2deb5594bef1b844dc84b98b7cd0b806@o4509660218785792.ingest.us.sentry.io/4509660268134400',
@@ -21,8 +23,7 @@ Sentry.init({
 });
 
 export default Sentry.wrap(function RootLayout() {
-    const { isLoading, fetchAuthenticatedUser } = useAuthStore();
-
+    const {isLoading, fetchAuthenticatedUser} = useAuthStore();
 
 
     const [fontsLoaded, error] = useFonts({
@@ -43,7 +44,12 @@ export default Sentry.wrap(function RootLayout() {
     }, []);
 
 
-    if(!fontsLoaded || isLoading) return null;
+    if (!fontsLoaded || isLoading) return null;
 
-    return <Stack screenOptions={{headerShown: false}}/>;
+    return (
+
+        <QueryClientProvider client={queryClient}>
+            <Stack screenOptions={{headerShown: false}}/>
+        </QueryClientProvider>
+    );
 });

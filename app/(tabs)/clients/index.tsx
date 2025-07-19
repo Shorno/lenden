@@ -2,13 +2,10 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {Text, View, TextInput, TouchableOpacity, FlatList, ActivityIndicator} from "react-native";
 import {MaterialIcons} from "@expo/vector-icons";
 import {router} from "expo-router";
-import {useEffect, useState} from "react";
 import {getClients} from "@/lib/appwrite";
-
+import {useQuery} from "@tanstack/react-query";
 
 const ClientCard = ({client}: { client: any }) => {
-
-
     const getStatusStyles = (status: string) => {
         switch (status) {
             case 'active':
@@ -38,9 +35,6 @@ const ClientCard = ({client}: { client: any }) => {
                     <Text className="text-sm text-gray-500">{client.email}</Text>
                 </View>
                 <View className="items-end">
-                    {/*<Text className="text-base font-bold text-gray-900 mb-1.5">*/}
-                    {/*    ${client.balance.toLocaleString()}*/}
-                    {/*</Text>*/}
                     <View className={`px-2 py-1 rounded-md ${statusStyles.bg}`}>
                         <Text className={`text-xs font-semibold uppercase tracking-wide ${statusStyles.text}`}>
                             {client.status}
@@ -57,28 +51,16 @@ const ClientCard = ({client}: { client: any }) => {
 };
 
 const Clients = () => {
+    const { data, isLoading, error, isError } = useQuery({
+        queryKey: ['clients'],
+        queryFn: async () => {
+            const response = await getClients();
+            return response.documents || [];
+        },
+    });
 
-    const [clients, setClients] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await getClients();
-                setClients(response.documents || []);
-            } catch (err: any) {
-                console.error(err);
-                setError(err.message || 'Failed to load clients');
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, []);
-
-    console.log(clients)
-
-    if (loading) {
+    if (isLoading) {
         return (
             <SafeAreaView className="flex-1 justify-center items-center">
                 <ActivityIndicator size="large" color="#3B82F6" />
@@ -86,14 +68,15 @@ const Clients = () => {
         );
     }
 
-    if (error) {
+    if (isError) {
         return (
             <SafeAreaView className="flex-1 justify-center items-center px-4">
-                <Text className="text-red-500 text-center">{error}</Text>
+                <Text className="text-red-500 text-center">
+                    {error?.message || 'Failed to load clients'}
+                </Text>
             </SafeAreaView>
         );
     }
-
 
     const handleAddClient = () => {
         router.push("/clients/add-client");
@@ -119,16 +102,8 @@ const Clients = () => {
                 </TouchableOpacity>
             </View>
 
-            {/* Index List */}
-            {/*<FlatList*/}
-            {/*    data={mockClients}*/}
-            {/*    keyExtractor={(item) => item.id}*/}
-            {/*    renderItem={({item}) => <ClientCard client={item}/>}*/}
-            {/*    showsVerticalScrollIndicator={false}*/}
-            {/*    contentContainerStyle={{paddingHorizontal: 20, paddingBottom: 100}}*/}
-            {/*/>*/}
             <FlatList
-                data={clients}
+                data={data}
                 keyExtractor={(item) => item.$id}
                 renderItem={({ item }) => <ClientCard client={item} />}
                 showsVerticalScrollIndicator={false}
