@@ -4,7 +4,15 @@ module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        kindsans: ["Kindsans-Regular", "sans-serif"],
+        "kindsans-bold": ["Kindsans-Bold", "sans-serif"],
+        "kindsans-semibold": ["Kindsans-SemiBold", "sans-serif"],
+        "kindsans-light": ["Kindsans-Light", "sans-serif"],
+        "kindsans-medium": ["Kindsans-Medium", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 }
