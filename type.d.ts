@@ -5,11 +5,15 @@ interface CustomInputProps {
     placeholder?: string;
     value?: string;
     onChangeText?: (text: string) => void;
+    onBlur?: () => void; // Added for React Hook Form
     label: string;
     secureTextEntry?: boolean;
     keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
     rightIcon?: React.ReactNode;
     onRightIconPress?: () => void;
+    error?: string; // Added for error handling
+    autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters'; // Added for better input control
+    autoCorrect?: boolean; // Added for better input control
 }
 
 interface CustomButtonProps {

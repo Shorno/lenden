@@ -55,7 +55,6 @@ const Profile = () => {
                         </TouchableOpacity>
                     </View>
 
-                    {/* Profile Card */}
                     <View className="items-center">
                         <View className="relative mb-4">
                             <Image
@@ -103,20 +102,6 @@ const Profile = () => {
                     </View>
                 </View>
 
-                {/* Account Settings */}
-                <View className="bg-white mx-6 mt-4 rounded-2xl p-6 shadow-sm border border-gray-100">
-                    <Text className="text-lg font-semibold text-gray-900 mb-4">Account Settings</Text>
-
-                    <TouchableOpacity className="flex-row items-center p-3 bg-gray-50 rounded-xl mb-3">
-                        <View className="w-10 h-10 bg-blue-100 rounded-full items-center justify-center mr-3">
-                            <Settings size={18} color="#3b82f6"/>
-                        </View>
-                        <View className="flex-1">
-                            <Text className="text-gray-900 font-medium">Preferences</Text>
-                            <Text className="text-sm text-gray-500">Manage your account settings</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
 
                 {/* Account Details */}
                 <View className="bg-white mx-6 mt-4 rounded-2xl p-6 shadow-sm border border-gray-100">

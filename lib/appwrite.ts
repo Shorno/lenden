@@ -6,7 +6,8 @@ export const appwriteConfig = {
     projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID!,
     platform: "com.shorno.lenden",
     databaseId: "68728727000972a0bdcd",
-    userCollectionId: "68728754001768a68363"
+    userCollectionId: "68728754001768a68363",
+    memberCollectionId: "687aceb700253f12cde0"
 }
 
 export const client = new Client()
@@ -71,6 +72,33 @@ export const getCurrentUser = async () => {
 export const logOut = async () => {
     try {
         await account.deleteSession('current');
+    } catch (error) {
+        throw new Error(error as string);
+    }
+}
+
+export const addClient = async ({name, memberId, location}: { name: string, memberId: string, location: string }) => {
+    try {
+        return await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.memberCollectionId,
+            ID.unique(),
+            {name, memberId, location}
+        )
+    } catch (error: any) {
+        throw new Error(error?.message || 'Failed to add client');
+    }
+}
+
+export const getClients = async () => {
+    try {
+        const currentUser = await getCurrentUser();
+        if (!currentUser) throw new Error('No user found');
+
+        return await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.memberCollectionId,
+        );
     } catch (error) {
         throw new Error(error as string);
     }
