@@ -9,7 +9,7 @@ export default function ClientsLayout() {
                 options={{
                     presentation: 'modal',
                     headerShown: true,
-                    headerTitle: 'Clients',
+                    headerTitle: 'New Client',
                     headerTitleStyle: {
                         fontSize: 18,
                         fontWeight: '600',

@@ -1,4 +1,4 @@
-import {Account, Avatars, Client, Databases, ID, Query} from "react-native-appwrite";
+import {Account, Avatars, Client, Databases, ID, Query, Storage} from "react-native-appwrite";
 import {CreateUserPrams, SignInParams} from "@/type";
 
 export const appwriteConfig = {
@@ -7,7 +7,8 @@ export const appwriteConfig = {
     platform: "com.shorno.lenden",
     databaseId: "68728727000972a0bdcd",
     userCollectionId: "68728754001768a68363",
-    memberCollectionId: "687aceb700253f12cde0"
+    memberCollectionId: "687aceb700253f12cde0",
+    bucketId: "687be8250001612c4c3c",
 }
 
 export const client = new Client()
@@ -19,6 +20,10 @@ export const account = new Account(client)
 export const databases = new Databases(client)
 
 export const avatars = new Avatars(client)
+
+
+export const storage = new Storage(client);
+
 
 export const createUser = async ({email, password, name}: CreateUserPrams) => {
     try {
@@ -77,13 +82,24 @@ export const logOut = async () => {
     }
 }
 
-export const addClient = async ({name, memberId, location}: { name: string, memberId: string, location: string }) => {
+
+export const addClient = async ({name, memberId, location, nidImageUri}: {
+    name: string,
+    memberId: string,
+    location: string,
+    nidImageUri: string
+}) => {
     try {
+        const fileName = `nid_${name}_${memberId}_${Date.now()}.jpg`;
+        const uploadResult = await uploadImage(nidImageUri, fileName);
+
+        const nidImageId = uploadResult.fileId;
+
         return await databases.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.memberCollectionId,
             ID.unique(),
-            {name, memberId, location}
+            {name, memberId, location, nidImageId}
         )
     } catch (error: any) {
         throw new Error(error?.message || 'Failed to add client');
@@ -101,5 +117,43 @@ export const getClients = async () => {
         );
     } catch (error) {
         throw new Error(error as string);
+    }
+}
+
+
+export const uploadImage = async (imageUri: string, fileName: string) => {
+    try {
+        const file = {
+            uri: imageUri,
+            type: 'image/jpeg',
+            name: fileName,
+            size :0,
+        };
+
+        const response = await storage.createFile(
+            appwriteConfig.bucketId,
+            ID.unique(),
+            file
+        );
+
+        console.log(response)
+
+        const fileUrl = storage.getFileView(appwriteConfig.bucketId, response.$id);
+
+
+        return {
+            fileId: response.$id,
+            fileUrl: fileUrl.toString()
+        };
+    } catch (error: any) {
+        throw new Error(error?.message || 'Failed to upload image');
+    }
+}
+
+export const deleteImage = async (fileId: string) => {
+    try {
+        await storage.deleteFile(appwriteConfig.bucketId, fileId);
+    } catch (error: any) {
+        console.log('Error deleting image:', error?.message);
     }
 }

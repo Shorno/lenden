@@ -1,9 +1,10 @@
 import {SafeAreaView} from "react-native-safe-area-context";
-import {Text, View, TextInput, TouchableOpacity, FlatList, ActivityIndicator} from "react-native";
+import {Text, View, TextInput, TouchableOpacity, FlatList, ActivityIndicator,Image} from "react-native";
 import {MaterialIcons} from "@expo/vector-icons";
 import {router} from "expo-router";
 import {getClients} from "@/lib/appwrite";
 import {useQuery} from "@tanstack/react-query";
+import {queryKeys} from "@/lib/queryKeys";
 
 const ClientCard = ({client}: { client: any }) => {
     const getStatusStyles = (status: string) => {
@@ -52,7 +53,7 @@ const ClientCard = ({client}: { client: any }) => {
 
 const Clients = () => {
     const { data, isLoading, error, isError } = useQuery({
-        queryKey: ['clients'],
+        queryKey: queryKeys.clients.all,
         queryFn: async () => {
             const response = await getClients();
             return response.documents || [];
